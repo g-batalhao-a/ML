@@ -21,10 +21,10 @@ x.shape
 y.shape
 
 # %%
+# Normalize the data
+x = (x - x.mean()) / x.std()
 # Add intercept term to x
 x = np.append(np.ones((x.shape)), x, axis=1)
-# Normalize the data
-x[:, 1] = (x[:, 1] - x[:, 1].mean()) / x[:, 1].std()
 
 # Num of examples and features (with intercept)
 m = x.shape[0]
@@ -75,7 +75,6 @@ def batch_gradient_descent(x, y, theta, alpha, threshold=10e-8, num_iter=1000000
 
         # Stop if the cost is below a threshold or if the num of iterations is above a certain amount
         if abs(cost_grd(x, y, theta)[1]) <= threshold or i >= num_iter:
-            print(abs(cost_grd(x, y, theta)[1]))
             break
 
     return theta, cost_hist, theta_hist, i
@@ -92,8 +91,8 @@ print(f'Cost of the model is {cost_hist[-1]} with {iterations} iterations')
 # Create predictions from our linear regression model and write them to a file
 x_test = np.genfromtxt(sys.argv[2]+'/X.csv', delimiter='\n')
 x_test = np.reshape(x_test, (-1, 1))
+x_test = (x_test - x_test.mean()) / x_test.std()
 x_test = np.append(np.ones((x_test.shape)), x_test, axis=1)
-x_test[:, 1] = (x_test[:, 1] - x_test[:, 1].mean()) / x_test[:, 1].std()
 predictions = x_test.dot(theta)
 with open('result_1.txt', 'w+') as f:
     for item in predictions:

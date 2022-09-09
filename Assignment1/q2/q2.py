@@ -25,8 +25,8 @@ data_points = 1000000
 x0 = np.ones((data_points, 1))
 
 # Samples
-x1 = np.random.normal(3, 2, data_points).reshape(-1, 1)
-x2 = np.random.normal(-1, 2, data_points).reshape(-1, 1)
+x1, x2 = np.random.normal(3, 2, data_points).reshape(-1,
+                                                     1), np.random.normal(-1, 2, data_points).reshape(-1, 1)
 
 # Create matrix
 x = np.append(x0, x1, axis=1)
@@ -34,13 +34,10 @@ x = np.append(x, x2, axis=1)
 
 # Sample epsilon error
 eps = np.random.normal(0, np.sqrt(2), data_points).reshape(-1, 1)
-
 theta = np.array([[3], [1], [2]])
-
-# Generate the value of Y (given X, parameterized by given Theta)
 y = x.dot(theta) + eps
 
-# Shuffle data
+# Randomize data
 temp = np.append(x, y, axis=1)
 np.random.shuffle(temp)
 
@@ -74,7 +71,7 @@ def cost_grd(x, y, theta, m):
 
 
 # Stochastic descent function
-def stochastic_gradient_descent(x, y, theta, alpha, r, batches, threshold=10e-7):
+def stochastic_gradient_descent(x, y, theta, alpha, r, batches, threshold=10e-8):
 
     start = time.time()
     theta = np.zeros((3, 1))
@@ -109,7 +106,8 @@ def stochastic_gradient_descent(x, y, theta, alpha, r, batches, threshold=10e-7)
     return theta, c_final, theta_hist, i, end-start
 
 
-batches = [(x[i:i+10000, :], y[i:i+10000]) for i in range(0, data_points, 10000)]
+batches = [(x[i:i+10000, :], y[i:i+10000])
+           for i in range(0, data_points, 10000)]
 theta, c_final, theta_hist, iterations, t = stochastic_gradient_descent(
     x, y, theta, alpha, 10000, batches)
 print(
